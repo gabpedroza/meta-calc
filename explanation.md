@@ -29,6 +29,8 @@ The **Geolocation Factor** accounts for the significant variance in advertising 
 
 Multipliers are derived from Meta's 2023 report, which, although rather old, should give a good enough estimate ([Meta's Form 10-Q for 2023Q3](https://www.sec.gov/Archives/edgar/data/1326801/000132680123000103/meta-20230930.htm)).
 
+Do keep in mind only some countries are supported. If yours is not, it will default to "Rest of the world".
+
 | Country Code (ISO 3166-1 alpha-2) | Multiplier | 
 | :--------------------------------- | :--------- | 
 | United States and Canada           | x5.0       | 

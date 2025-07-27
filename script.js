@@ -7,11 +7,16 @@ const ageInput = document.getElementById('age');
 const genderSelect = document.getElementById('gender');
 const usageSelect = document.getElementById('usage');
 const languageSelect = document.getElementById('language-select');
+const locationToggle = document.getElementById('location-toggle');
 
 // --- Default Values ---
 let userCountry = 'default';
 let deviceModel = 'unknown';
 let userLanguage = 'en';
+
+// Set initial values based on detected language for a more relevant default
+let initialCountry = 'US';
+let initialCurrency = 'USD';
 
 // --- Helper Functions ---
 function getDeviceModel() {
@@ -186,7 +191,17 @@ generateBtn.addEventListener('click', async () => {
     imageLoadingSpinner.style.display = 'block'; // Show spinner
     downloadLink.style.display = 'none'; // Hide download link
     try {
-        userCountry = await getGeolocation();
+        if (locationToggle.checked) {
+            try {
+                userCountry = await getGeolocation();
+            } catch (error) {
+                console.warn("Geolocation failed, using default country:", error);
+                userCountry = initialCountry; // Fallback to initialCountry if geolocation fails
+            }
+        } else {
+            userCountry = initialCountry; // Use initialCountry if toggle is off
+        }
+
         deviceModel = getDeviceModel();
         const age = ageInput.value;
         const gender = genderSelect.value;
@@ -223,13 +238,6 @@ if (!translations[userLanguage]) {
 languageSelect.value = userLanguage;
 setLanguage();
 
-// Set initial values based on detected language for a more relevant default
-let initialCountry = 'US';
-let initialCurrency = 'USD';
-if (userLanguage === 'pt') {
-    initialCountry = 'BR';
-    initialCurrency = 'BRL';
-}
 
 // Only attempt geolocation if the toggle is checked on initial load
 if (locationToggle.checked) {
