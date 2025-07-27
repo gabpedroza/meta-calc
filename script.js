@@ -239,17 +239,41 @@ languageSelect.value = userLanguage;
 setLanguage();
 
 
-// Only attempt geolocation if the toggle is checked on initial load
-if (locationToggle.checked) {
-    getGeolocation().then(country => {
-        initialCountry = country;
-        initialCurrency = getCurrency(initialCountry);
-        generateImage(calculateValue(initialCountry, 'iPhone', 25, 'female', 'scroller'), initialCurrency);
-    }).catch(error => {
-        console.warn("Initial geolocation failed:", error);
-        generateImage(calculateValue(initialCountry, 'iPhone', 25, 'female', 'scroller'), initialCurrency);
-    });
-} else {
-    generateImage(calculateValue(initialCountry, 'iPhone', 25, 'female', 'scroller'), initialCurrency);
-}
+// Initial image generation with default values
+const age = ageInput.value;
+const gender = genderSelect.value;
+const usage = usageSelect.value;
+const currency = getCurrency(initialCountry);
+const estimatedValue = calculateValue(initialCountry, getDeviceModel(), age, gender, usage);
+generateImage(estimatedValue, currency);
+
+locationToggle.addEventListener('change', async () => {
+    imageLoadingSpinner.style.display = 'block'; // Show spinner
+    downloadLink.style.display = 'none'; // Hide download link
+    try {
+        if (locationToggle.checked) {
+            try {
+                userCountry = await getGeolocation();
+            } catch (error) {
+                console.warn("Geolocation failed, using default country:", error);
+                userCountry = initialCountry; // Fallback to initialCountry if geolocation fails
+            }
+        } else {
+            userCountry = initialCountry; // Use initialCountry if toggle is off
+        }
+
+        const age = ageInput.value;
+        const gender = genderSelect.value;
+        const usage = usageSelect.value;
+        const currency = getCurrency(userCountry);
+
+        const estimatedValue = calculateValue(userCountry, getDeviceModel(), age, gender, usage);
+        generateImage(estimatedValue, currency);
+    } catch (error) {
+        console.error('Error generating image on toggle change:', error);
+        alert('An error occurred while generating the image. Please try again.');
+    } finally {
+        imageLoadingSpinner.style.display = 'none'; // Hide spinner
+    }
+});
 
