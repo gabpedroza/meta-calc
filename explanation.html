@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Explained</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="explanation-loading-spinner" class="spinner"></div>
+        <div id="markdown-content" style="display: none;"></div>
+        <div class="home-link">
+            <a href="index.html">Back to Home</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const explanationLoadingSpinner = document.getElementById('explanation-loading-spinner');
+        const markdownContent = document.getElementById('markdown-content');
+
+        explanationLoadingSpinner.style.display = 'block'; // Show spinner initially
+        markdownContent.style.display = 'none'; // Hide content initially
+
+        fetch('explanation.md')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(markdown => {
+                markdownContent.innerHTML = marked.parse(markdown);
+                explanationLoadingSpinner.style.display = 'none'; // Hide spinner
+                markdownContent.style.display = 'block'; // Show content
+            })
+            .catch(error => {
+                console.error('Error loading or parsing Markdown:', error);
+                markdownContent.innerHTML = '<p>Error loading explanation. Please try again later.</p>';
+                explanationLoadingSpinner.style.display = 'none'; // Hide spinner even on error
+                markdownContent.style.display = 'block'; // Show error message
+            });
+    </script>
+</body>
+</html>

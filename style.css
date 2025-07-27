@@ -1,0 +1,200 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 500px; /* Reverted max-width for index.html */
+    width: 100%;
+    text-align: center; /* Reverted text-align for index.html */
+    box-sizing: border-box;
+}
+
+/* Styles specifically for Markdown content within explanation.html */
+#markdown-content h1, #markdown-content h2, #markdown-content h3, #markdown-content h4, #markdown-content h5, #markdown-content h6 {
+    color: #0056b3;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    text-align: left; /* Ensure headings are left-aligned in markdown */
+}
+
+#markdown-content p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 1em;
+    word-wrap: break-word;
+    text-align: left; /* Ensure paragraphs are left-aligned in markdown */
+}
+
+#markdown-content ul, #markdown-content ol {
+    margin-bottom: 1em;
+    padding-left: 20px;
+    text-align: left; /* Ensure lists are left-aligned in markdown */
+}
+
+#markdown-content li {
+    margin-bottom: 0.5em;
+}
+
+#markdown-content pre {
+    background-color: #eee;
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+    text-align: left; /* Ensure pre blocks are left-aligned in markdown */
+}
+
+#markdown-content code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+
+#markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    overflow-x: auto;
+    display: block;
+    text-align: left; /* Ensure tables are left-aligned in markdown */
+}
+
+#markdown-content th, #markdown-content td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#markdown-content th {
+    background-color: #f2f2f2;
+}
+
+#markdown-content a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+#markdown-content a:hover {
+    text-decoration: underline;
+}
+
+/* Existing styles for the main page (index.html) */
+h1 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-container input,
+.input-container select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+#generate-btn, .download-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+#generate-btn:hover, .download-btn:hover {
+    background-color: #0056b3;
+}
+
+.image-container {
+    margin-top: 20px;
+}
+
+#story-canvas {
+    width: 100%;
+    max-width: 270px; /* 1080px / 4 */
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.explanation-link, .home-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.explanation-link a, .home-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.explanation-link a:hover {
+    text-decoration: underline;
+}
+
+.language-selector {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.language-selector label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.language-selector select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Loading Spinner Styles */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #007bff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    display: none; /* Hidden by default */
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
