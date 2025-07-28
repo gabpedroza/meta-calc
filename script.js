@@ -68,6 +68,33 @@ function getCurrency(country) {
     return currencyMap[country] || currencyMap['default'];
 }
 
+let exchangeRates = {};
+
+async function getExchangeRates() {
+    // Using a free, no-key-required API for exchange rates
+    const apiUrl = 'https://open.er-api.com/v6/latest/USD';
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.rates;
+    } catch (error) {
+        console.error("Could not fetch exchange rates, using fallback values:", error);
+        // Fallback values in case the API fails
+        return {
+            USD: 1,
+            BRL: 5.45, // Example rate
+            GBP: 0.79, // Example rate
+            EUR: 0.92,
+            CAD: 1.37,
+            AUD: 1.50,
+            JPY: 157.0
+        };
+    }
+}
+
 function calculateValue(country, device, age, gender, usage) {
     let baseValue = 0.27; // Default base value in USD per hour
     let region = regions[country] || regions["default"];
@@ -208,8 +235,10 @@ generateBtn.addEventListener('click', async () => {
         const usage = usageSelect.value;
         const currency = getCurrency(userCountry);
 
-        const estimatedValue = calculateValue(userCountry, deviceModel, age, gender, usage);
-        generateImage(estimatedValue, currency);
+        const estimatedValueUSD = calculateValue(userCountry, deviceModel, age, gender, usage);
+        const rate = exchangeRates[currency] || 1;
+        const convertedValue = estimatedValueUSD * rate;
+        generateImage(convertedValue, currency);
     } catch (error) {
         console.error('Error generating image:', error);
         alert('An error occurred while generating the image. Please try again.');
@@ -218,34 +247,42 @@ generateBtn.addEventListener('click', async () => {
     }
 });
 
-languageSelect.addEventListener('change', () => {
+languageSelect.addEventListener('change', async () => {
     setLanguage();
     // Re-generate image and update values based on new language
     const age = ageInput.value;
     const gender = genderSelect.value;
     const usage = usageSelect.value;
     const currency = getCurrency(userCountry);
-    const estimatedValue = calculateValue(userCountry, deviceModel, age, gender, usage);
-    generateImage(estimatedValue, currency);
+    const estimatedValueUSD = calculateValue(userCountry, deviceModel, age, gender, usage);
+    const rate = exchangeRates[currency] || 1;
+    const convertedValue = estimatedValueUSD * rate;
+    generateImage(convertedValue, currency);
 });
 
 // --- Initial Load ---
-// Set initial language based on browser, then update selector
-userLanguage = navigator.language.split('-')[0];
-if (!translations[userLanguage]) {
-    userLanguage = 'en';
-}
-languageSelect.value = userLanguage;
-setLanguage();
+(async () => {
+    exchangeRates = await getExchangeRates();
+    // Set initial language based on browser, then update selector
+    userLanguage = navigator.language.split('-')[0];
+    if (!translations[userLanguage]) {
+        userLanguage = 'en';
+    }
+    languageSelect.value = userLanguage;
+    setLanguage();
 
 
-// Initial image generation with default values
-const age = ageInput.value;
-const gender = genderSelect.value;
-const usage = usageSelect.value;
-const currency = getCurrency(initialCountry);
-const estimatedValue = calculateValue(initialCountry, getDeviceModel(), age, gender, usage);
-generateImage(estimatedValue, currency);
+    // Initial image generation with default values
+    const age = ageInput.value;
+    const gender = genderSelect.value;
+    const usage = usageSelect.value;
+    const currency = getCurrency(initialCountry);
+    const estimatedValueUSD = calculateValue(initialCountry, getDeviceModel(), age, gender, usage);
+    const rate = exchangeRates[currency] || 1;
+    const convertedValue = estimatedValueUSD * rate;
+    generateImage(convertedValue, currency);
+})();
+
 
 locationToggle.addEventListener('change', async () => {
     imageLoadingSpinner.style.display = 'block'; // Show spinner
@@ -267,8 +304,10 @@ locationToggle.addEventListener('change', async () => {
         const usage = usageSelect.value;
         const currency = getCurrency(userCountry);
 
-        const estimatedValue = calculateValue(userCountry, getDeviceModel(), age, gender, usage);
-        generateImage(estimatedValue, currency);
+        const estimatedValueUSD = calculateValue(userCountry, getDeviceModel(), age, gender, usage);
+        const rate = exchangeRates[currency] || 1;
+        const convertedValue = estimatedValueUSD * rate;
+        generateImage(convertedValue, currency);
     } catch (error) {
         console.error('Error generating image on toggle change:', error);
         alert('An error occurred while generating the image. Please try again.');
